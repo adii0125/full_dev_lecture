@@ -72,6 +72,9 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://localhost:8080",
     "http://127.0.0.1:9000",
+    "https://full-dev-lecture-lj0a8h5jg-ton-s-projects9.vercel.app",
+    "https://full-dev-lecture-git-main-ton-s-projects9.vercel.app",
+    "https://full-dev-lecture.vercel.app",
 ]
 
 extra_cors_origins = os.environ.get('CORS_ALLOWED_ORIGINS')
