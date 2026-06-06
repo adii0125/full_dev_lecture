@@ -156,9 +156,9 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-XENDIT_SECRET_KEY = os.environ.get('XENDIT_SECRET_KEY', '')
-XENDIT_CALLBACK_TOKEN = os.environ.get('XENDIT_CALLBACK_TOKEN', '')
-FRONTEND_URL = os.environ.get('FRONTEND_URL', 'https://full-dev-lecture.vercel.app')
+XENDIT_SECRET_KEY = "xnd_development_Zo218pu58hbI4t3NS66zdsAjwamKc2XizsByU6IQJHjyqVgymATVC2CN1agHjN4i"
+XENDIT_CALLBACK_TOKEN = "os.environ.get('W8N3wIXTvHOfhOYSN4I9dr26Go4g901ZLSgMSi7qrga1B5Ai', '')"
+FRONTEND_URL = "FRONTEND_URL', 'https://full-dev-lecture.vercel.app"
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
