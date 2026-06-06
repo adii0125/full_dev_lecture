@@ -1,13 +1,17 @@
 import { useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { apiRequest } from '../base_api/api';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 
 const paymentMethods = [
-  { id: 'gcash', label: 'GCash', text: 'Pay using a mobile wallet checkout.' },
-  { id: 'card', label: 'Card', text: 'Pay using debit or credit card.' },
-  { id: 'cod', label: 'Cash on Delivery', text: 'Pay when your order arrives.' },
+  { id: 'gcash', label: 'GCash', text: 'Pay through Xendit hosted checkout.' },
+  { id: 'card', label: 'Card', text: 'Pay with debit or credit card through Xendit.' },
 ];
+
+function getCartItemId(item) {
+  return item.cart_id ?? item.id;
+}
 
 function Checkout() {
   const location = useLocation();
@@ -15,11 +19,27 @@ function Checkout() {
   const total = location.state?.total || 0;
   const [paymentMethod, setPaymentMethod] = useState('gcash');
   const [message, setMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
-    const method = paymentMethods.find((item) => item.id === paymentMethod);
-    setMessage(`Checkout prepared using ${method.label}. Total: PHP ${Number(total).toFixed(2)}`);
+    setIsSubmitting(true);
+    setMessage('Creating secure checkout...');
+
+    try {
+      const data = await apiRequest('/checkout/xendit/', {
+        method: 'POST',
+        body: JSON.stringify({
+          payment_method: paymentMethod,
+          cart_item_ids: items.map((item) => getCartItemId(item)),
+        }),
+      });
+
+      window.location.href = data.invoice_url;
+    } catch (error) {
+      setMessage(error.message);
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -59,8 +79,12 @@ function Checkout() {
                 <p className="mt-2 text-2xl font-extrabold text-slate-950">PHP {Number(total).toFixed(2)}</p>
               </div>
 
-              <button className="min-h-11 rounded-lg bg-slate-900 px-5 text-sm font-bold text-white" type="submit">
-                Place Order
+              <button
+                className="min-h-11 rounded-lg bg-slate-900 px-5 text-sm font-bold text-white disabled:cursor-not-allowed disabled:bg-slate-400"
+                type="submit"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Opening Xendit...' : 'Pay with Xendit'}
               </button>
               {message && <p className="font-semibold text-teal-700">{message}</p>}
             </form>
