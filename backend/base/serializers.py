@@ -43,3 +43,26 @@ class CartUserSerializer(serializers.ModelSerializer):
             'qty',
         ]
 
+
+class XenditCheckoutSerializer(serializers.Serializer):
+    cart_item_ids = serializers.ListField(
+        child=serializers.IntegerField(),
+        allow_empty=False,
+        required=False,
+    )
+    payment_method = serializers.ChoiceField(
+        choices=['gcash', 'card'],
+        required=False,
+        default='gcash',
+    )
+
+
+class XenditInvoiceSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    totalPrice = serializers.DecimalField(max_digits=10, decimal_places=2)
+    isPaid = serializers.BooleanField()
+    paidAt = serializers.DateTimeField(allow_null=True)
+    xendit_invoice_id = serializers.CharField(allow_blank=True)
+    xendit_external_id = serializers.CharField()
+    xendit_status = serializers.CharField()
+    invoice_url = serializers.URLField()

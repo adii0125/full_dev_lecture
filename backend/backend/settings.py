@@ -156,6 +156,10 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+XENDIT_SECRET_KEY = os.environ.get('XENDIT_SECRET_KEY', '')
+XENDIT_CALLBACK_TOKEN = os.environ.get('XENDIT_CALLBACK_TOKEN', '')
+FRONTEND_URL = os.environ.get('FRONTEND_URL', 'https://full-dev-lecture.vercel.app')
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',

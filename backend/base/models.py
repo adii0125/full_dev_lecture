@@ -32,22 +32,13 @@ class paymentMethod(models.Model):
     xendit_status = models.CharField(max_length=50, blank=True, default='PENDING')
 
     def mark_paid(self):
-        """Mark this payment as paid, create order items from the user's cart,
-        and clear the user's cart. This operation is atomic and idempotent.
-        """
+        """Mark this payment as paid and remove purchased items from the cart."""
         if self.isPaid:
             return
 
-        carts = CartUser.objects.filter(user=self.user)
         with transaction.atomic():
-            for c in carts:
-                orderItem.objects.create(
-                    product=c.product,
-                    payment=self,
-                    qty=c.qty,
-                    price=c.product.product_price,
-                )
-            carts.delete()
+            product_ids = orderItem.objects.filter(payment=self).values_list('product_id', flat=True)
+            CartUser.objects.filter(user=self.user, product_id__in=product_ids).delete()
             self.isPaid = True
             self.paidAt = timezone.now()
             self.save()
@@ -76,4 +67,3 @@ class CartUser(models.Model):
 
     def __str__(self):
         return f'{self.user.username} - {self.product.product_name}'
-

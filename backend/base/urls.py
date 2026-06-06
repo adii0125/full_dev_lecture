@@ -12,4 +12,6 @@ urlpatterns = [
     path('cart/<int:pk>/update/', views.update_cart_item, name='update-cart-item-legacy'),
     path('cart/update/<int:pk>/', views.update_cart_item, name='update-cart-item'),
     path('cart/remove/<int:pk>/', views.remove_from_cart, name='remove-from-cart'),
+    path('checkout/xendit/', views.create_xendit_checkout, name='create-xendit-checkout'),
+    path('xendit/webhook/', views.xendit_invoice_webhook, name='xendit-invoice-webhook'),
 ]
