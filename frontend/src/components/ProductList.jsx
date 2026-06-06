@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { BASE_URL } from '../base_api/base';
 import { getImageUrl } from '../base_api/api';
 
 function ProductList({ featured = false }) {
@@ -10,7 +11,7 @@ function ProductList({ featured = false }) {
   useEffect(() => {
     async function loadProducts() {
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/products/');
+        const response = await axios.get(`${BASE_URL}/api/products/`);
         setProducts(response.data);
         setMessage('');
       } catch (error) {

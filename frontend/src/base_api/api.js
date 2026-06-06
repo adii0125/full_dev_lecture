@@ -1,6 +1,7 @@
-const API_URL = '/api';
-//const BACKEND_URL = 'http://127.0.0.1:8000'; 
-const BACKEND_URL = 'https://full-dev-lecture.onrender.com/'; //live server URL
+import { BASE_URL } from './base';
+
+const API_URL = `${BASE_URL}/api`;
+const BACKEND_URL = BASE_URL;
 export const AUTH_CHANGE_EVENT = 'auth-change';
 
 export function getToken() {
