@@ -319,7 +319,7 @@ def create_xendit_checkout(request):
         'currency': 'PHP',
         'items': items,
         'payment_methods': selected_payment_methods(serializer.validated_data['payment_method']),
-        'success_redirect_url': f'{frontend_url}/account?payment=success',
+        'success_redirect_url': f'{frontend_url}/?payment=success',
         'failure_redirect_url': f'{frontend_url}/checkout?payment=failed',
         'metadata': {
             'payment_id': payment.id,
@@ -362,6 +362,7 @@ def xendit_invoice_webhook(request):
     external_id = request.data.get('external_id')
     invoice_id = request.data.get('id')
     invoice_status = request.data.get('status', '')
+    normalized_status = invoice_status.upper()
 
     try:
         payment = paymentMethod.objects.get(xendit_external_id=external_id)
@@ -369,8 +370,8 @@ def xendit_invoice_webhook(request):
         return Response({'detail': 'Payment not found.'}, status=status.HTTP_404_NOT_FOUND)
 
     payment.xendit_invoice_id = invoice_id or payment.xendit_invoice_id
-    payment.xendit_status = invoice_status or payment.xendit_status
-    if invoice_status == 'PAID':
+    payment.xendit_status = normalized_status or payment.xendit_status
+    if normalized_status in ['PAID', 'SETTLED', 'SUCCEEDED', 'SUCCESS', 'COMPLETED']:
         payment.mark_paid()
     else:
         payment.save(update_fields=['xendit_invoice_id', 'xendit_status'])
